@@ -75,6 +75,13 @@
         .form-group label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 0.25rem; }
         .form-group input { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
         .btn-checkout { background: var(--primary); color: white; width: 100%; padding: 1rem; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 1rem; }
+        
+        /* Success Animation CSS */
+        .success-checkmark { width: 80px; height: 80px; border-radius: 50%; background: var(--primary); display: flex; justify-content: center; align-items: center; margin: 0 auto 1.5rem auto; animation: scaleIn 0.4s ease-out both; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+        .success-checkmark::after { content: ''; width: 22px; height: 42px; border: solid white; border-width: 0 6px 6px 0; transform: rotate(45deg) translate(-5px, -8px); animation: popIn 0.6s ease-out both; animation-delay: 0.2s; opacity: 0; }
+        @keyframes scaleIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        @keyframes popIn { 0% { opacity: 0; transform: rotate(45deg) scale(0); } 100% { opacity: 1; transform: rotate(45deg) scale(1) translate(-2px, -6px); } }
+        .highlight-text { color: var(--primary); font-size: 2rem; margin-bottom: 0.5rem; font-weight: 800; }
     </style>
 </head>
 <body>
@@ -119,8 +126,25 @@
     </div>
 </div>
 
+<!-- Animated Success Modal -->
+<div id="success-modal" class="modal">
+    <div class="modal-content" style="text-align: center; padding: 3rem 2rem;">
+        <div class="success-checkmark"></div>
+        <h2 class="highlight-text">Your Order is Placed!</h2>
+        <div style="font-size: 1.1rem; line-height: 1.6; color: var(--text);">
+            <p style="margin-bottom: 1.5rem; color: var(--text-light);">Order ID: <strong style="color: #000;" id="success-order-id"></strong></p>
+            <p>You will get the confirmation via <strong>WhatsApp</strong> or <strong>call</strong>.</p>
+            <p style="margin-top: 1rem; background: #f9fafb; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+                Or you can contact<br>
+                <strong style="font-size: 1.4rem; color: var(--primary);">+91 9811353658</strong><br>
+                for instant confirmation.
+            </p>
+        </div>
+        <button class="btn-checkout" style="margin-top: 2rem;" onclick="closeSuccessModal()">Continue Shopping</button>
+    </div>
+</div>
+
 <script>
-    // WEB APP URL
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwpPrbndidj9uxH_X25K1L4p4DyH-3flK92tXE5l4n3vwBWTz4fp_yzB1cz_fTLK0S/exec";
 
     let allProducts = [];
@@ -153,7 +177,6 @@
             const coverImage = images[0].trim();
             const isOutOfStock = p.stock <= 0;
             
-            // Calculate Discount
             let discountHtml = '';
             let crossPriceHtml = '';
             if (p.crossPrice && Number(p.crossPrice) > Number(p.price)) {
@@ -222,7 +245,6 @@
             <button class="carousel-btn next" onclick="changeSlide(1)">&#10095;</button>
         ` : '';
 
-        // Detail pricing logic
         let detailPricingHtml = `<span class="price" style="font-size: 1.6rem;">₹${p.price}</span>`;
         if (p.crossPrice && Number(p.crossPrice) > Number(p.price)) {
             let discountPercent = Math.round(((Number(p.crossPrice) - Number(p.price)) / Number(p.crossPrice)) * 100);
@@ -343,6 +365,17 @@
         }
     }
 
+    // Success Modal Logic
+    function openSuccessModal(orderId) {
+        document.getElementById('checkout-modal').style.display = 'none';
+        document.getElementById('success-order-id').innerText = orderId;
+        document.getElementById('success-modal').style.display = 'flex';
+    }
+    
+    function closeSuccessModal() {
+        document.getElementById('success-modal').style.display = 'none';
+    }
+
     document.getElementById('checkout-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = document.querySelector('.btn-checkout');
@@ -364,10 +397,19 @@
 
         try {
             await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
-            alert(`Order Placed Success!\nYour Order Tracking ID is: ${orderId}\nPayment is collected at room location.`);
-            cart = []; updateCartUI(); toggleCart(); loadProducts(); document.getElementById('checkout-form').reset();
-        } catch (error) { alert("Data stream connectivity interruption."); } 
-        finally { btn.innerText = "Confirm & Place Order"; btn.disabled = false; }
+            
+            // Clean up UI and open animated success modal
+            cart = []; 
+            updateCartUI(); 
+            loadProducts(); 
+            document.getElementById('checkout-form').reset();
+            openSuccessModal(orderId);
+            
+        } catch (error) { 
+            alert("Data stream connectivity interruption. Please try again."); 
+        } finally { 
+            btn.innerText = "Confirm & Place Order"; btn.disabled = false; 
+        }
     });
 
     loadProducts();
