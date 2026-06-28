@@ -5,22 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TwinMac | Student Store</title>
     <style>
-        /* LIGHT & DARK MODE VARIABLES */
-        :root { 
-            --primary: #10b981; --primary-hover: #059669; 
-            --bg: #f3f4f6; --surface: #ffffff; 
-            --text: #1f2937; --text-light: #6b7280; 
+        :root {
+            --primary: #10b981; --primary-hover: #059669;
+            --bg: #f3f4f6; --surface: #ffffff;
+            --text: #1f2937; --text-light: #6b7280;
             --border: #e5e7eb; --danger: #ef4444; --warning: #f59e0b;
         }
         body.dark-mode {
-            --bg: #111827; --surface: #1f2937; 
-            --text: #f9fafb; --text-light: #9ca3af; 
-            --border: #374151; 
+            --bg: #111827; --surface: #1f2937;
+            --text: #f9fafb; --text-light: #9ca3af;
+            --border: #374151;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { background-color: var(--bg); color: var(--text); transition: background-color 0.3s, color 0.3s; }
-        
+       
         header { background: var(--surface); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 1rem; transition: background-color 0.3s;}
         .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); cursor: pointer; }
         .search-bar { flex-grow: 1; max-width: 400px; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 99px; outline: none; background: var(--bg); color: var(--text); }
@@ -28,89 +26,114 @@
         .theme-toggle { background: transparent; border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; color: var(--text); transition: 0.3s;}
         .theme-toggle:hover { background: var(--bg); }
         .cart-toggle { background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: bold; white-space: nowrap;}
-        
-        /* CATEGORY CHIPS */
+       
         .chip-container { padding: 1rem 5%; display: flex; gap: 0.5rem; overflow-x: auto; max-width: 1200px; margin: 0 auto; scrollbar-width: none; }
         .chip-container::-webkit-scrollbar { display: none; }
         .chip { padding: 0.4rem 1rem; border-radius: 99px; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 0.85rem; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .chip:hover { background: var(--bg); }
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
-
         main { padding: 1rem 5% 2rem; max-width: 1200px; margin: 0 auto; }
         #loading { text-align: center; color: var(--text-light); margin: 2rem 0; font-size: 1.1rem; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
-        
+       
         .card { background: var(--surface); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: transform 0.2s, background-color 0.3s; position: relative;}
         .card:hover { transform: translateY(-4px); }
         .card img { width: 100%; height: 200px; object-fit: cover; background: #eee; cursor: pointer; }
-        
-        /* BADGES */
+       
         .discount-badge { position: absolute; top: 10px; left: 10px; background: var(--danger); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; z-index: 10; }
-        .bestseller-badge { position: absolute; top: 10px; right: 10px; background: #fbbf24; color: #78350f; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; z-index: 10; display: flex; align-items: center; gap: 0.2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2);}
-        
+        .bestseller-badge { position: absolute; top: 10px; right: 10px; background: #fbbf24; color: #78350f; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.2);}
+       
         .card-body { padding: 1rem; display: flex; flex-direction: column; flex-grow: 1; }
         .category { font-size: 0.75rem; text-transform: uppercase; color: var(--primary); font-weight: bold; letter-spacing: 0.05em; }
         .title { font-size: 1.1rem; margin: 0.25rem 0; cursor: pointer; }
         .title:hover { color: var(--primary); }
         .desc { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-line; }
-        
+       
         .price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .price-container { display: flex; flex-direction: column; }
         .price { font-size: 1.25rem; font-weight: bold; color: var(--text);}
         .cross-price { font-size: 0.85rem; color: #9ca3af; text-decoration: line-through; }
-        
-        .low-stock-alert { color: var(--warning); font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.2rem;}
-
-        .btn-add { background: var(--text); color: var(--bg); border: none; padding: 0.75rem; border-radius: 6px; cursor: pointer; width: 100%; transition: background 0.2s; font-weight: bold;}
-        .btn-add:hover:not(:disabled) { opacity: 0.8; }
-        .btn-add:disabled { background: var(--border); color: var(--text-light); cursor: not-allowed; }
-
-        /* MODALS */
+        .low-stock-alert { color: var(--warning); font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem;}
+        .btn-group-half { display: flex; gap: 0.5rem; width: 100%; }
+        .btn-add, .btn-buy { flex: 1; border: none; padding: 0.75rem; border-radius: 6px; cursor: pointer; font-weight: bold; transition: opacity 0.2s;}
+        .btn-add { background: var(--border); color: var(--text); }
+        .btn-add:hover:not(:disabled) { background: #d1d5db; }
+        body.dark-mode .btn-add:hover:not(:disabled) { background: #4b5563; }
+        .btn-buy { background: var(--text); color: var(--bg); }
+        .btn-buy:hover:not(:disabled) { opacity: 0.8; }
+        .btn-add:disabled, .btn-buy:disabled { opacity: 0.5; cursor: not-allowed; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; padding: 1rem; backdrop-filter: blur(2px);}
         .modal-content { background: var(--surface); width: 100%; max-width: 600px; border-radius: 8px; padding: 2rem; max-height: 90vh; overflow-y: auto; position: relative; color: var(--text); transition: background-color 0.3s;}
         .close { position: absolute; right: 1.5rem; top: 1.5rem; cursor: pointer; font-size: 1.5rem; line-height: 1; color: var(--text-light); transition: color 0.2s;}
         .close:hover { color: var(--text); }
-        
+       
         .carousel-container { position: relative; width: 100%; height: 300px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 1rem; }
         .carousel-slide { width: 100%; height: 100%; display: none; justify-content: center; align-items: center; }
         .carousel-slide.active { display: flex; }
         .carousel-slide img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; font-size: 1.2rem; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; z-index: 10; user-select: none; }
-        
+        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.7); color: white; border: none; font-size: 1.5rem; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; z-index: 10; user-select: none; transition: 0.2s; }
+        .carousel-btn:hover { background: var(--primary); }
+        .carousel-btn.prev { left: 10px; }
+        .carousel-btn.next { right: 10px; }
+       
         .detail-title { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text);}
         .detail-desc { color: var(--text); margin-bottom: 1.5rem; line-height: 1.6; white-space: pre-wrap; font-size: 0.95rem; }
-
         .cart-item-card { display: flex; gap: 1rem; background: var(--bg); padding: 0.75rem; border-radius: 6px; margin-bottom: 0.75rem; border: 1px solid var(--border); align-items: center; }
         .cart-item-card img { width: 60px; height: 80px; object-fit: cover; border-radius: 4px; background: #eee; }
         .cart-item-details { flex-grow: 1; }
-        .cart-item-title { font-weight: bold; font-size: 0.95rem; }
+        .cart-item-title { font-weight: bold; font-size: 0.95rem; color: var(--text); }
         .cart-qty-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
         .qty-btn { padding: 0.2rem 0.5rem; font-size: 0.85rem; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-weight: bold; border-radius: 4px; }
         .cart-item-price { font-weight: bold; font-size: 0.95rem; color: var(--text); margin-left: auto; text-align: right; }
         .remove-cart-item { color: var(--danger); background: none; border: none; font-size: 0.8rem; cursor: pointer; text-decoration: underline; margin-top: 0.25rem; display: block; }
-
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 0.25rem; color: var(--text);}
         .form-group input { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; background: var(--bg); color: var(--text);}
-        .btn-checkout { background: var(--primary); color: white; width: 100%; padding: 1rem; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 1rem; }
-        
+        .btn-checkout { background: var(--primary); color: white; width: 100%; padding: 1rem; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 1rem; transition: opacity 0.2s; }
+        .btn-checkout:disabled { opacity: 0.5; cursor: not-allowed; }
         .success-checkmark { width: 70px; height: 70px; border-radius: 50%; background: var(--primary); display: flex; justify-content: center; align-items: center; margin: 0 auto 1.5rem auto; animation: scaleIn 0.4s ease-out both; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
         .success-checkmark::after { content: ''; width: 20px; height: 38px; border: solid white; border-width: 0 5px 5px 0; transform: rotate(45deg) translate(-4px, -8px); animation: popIn 0.6s ease-out both; animation-delay: 0.2s; opacity: 0; }
+        
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: none;
+            align-items: center;
+            gap: 8px;
+            z-index: 9999;
+            animation: slideUp 0.3s ease;
+        }
+        body.dark-mode #toast {
+            background: #374151;
+        }
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        
         @keyframes scaleIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
         @keyframes popIn { 0% { opacity: 0; transform: rotate(45deg) scale(0); } 100% { opacity: 1; transform: rotate(45deg) scale(1) translate(-2px, -6px); } }
     </style>
 </head>
 <body>
-
 <header>
     <div class="logo" onclick="resetSearch()">TwinMac</div>
     <input type="text" class="search-bar" id="search-input" placeholder="Search products..." onkeyup="filterProducts()">
     <div class="header-actions">
         <button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
-        <button class="cart-toggle" onclick="toggleCart()">Cart (<span id="cart-count">0</span>) - ₹<span id="cart-total">0</span></button>
+        <button class="cart-toggle" onclick="openTrackModal()" style="background:var(--text); color:var(--bg);">📍 Track</button>
+        <button class="cart-toggle" onclick="toggleCart()">🛒 (<span id="cart-count">0</span>)</button>
     </div>
 </header>
-
 <div class="chip-container">
     <div class="chip active" id="chip-All" onclick="filterByCategory('All')">All</div>
     <div class="chip" id="chip-Book" onclick="filterByCategory('Book')">Books</div>
@@ -118,50 +141,52 @@
     <div class="chip" id="chip-Notebook" onclick="filterByCategory('Notebook')">Notebooks</div>
     <div class="chip" id="chip-Kit" onclick="filterByCategory('Kit')">Kits</div>
 </div>
-
 <main>
     <div id="loading">Connecting to Google Sheets...</div>
     <div class="grid" id="product-grid"></div>
 </main>
 
+<!-- Product Detail Modal -->
 <div id="detail-modal" class="modal">
     <div class="modal-content" id="detail-content"></div>
 </div>
 
+<!-- Cart / Checkout Modal -->
 <div id="checkout-modal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="toggleCart()">&times;</span>
-        <h2 style="margin-top:0; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: var(--text);">Your Cart</h2>
+        <span class="close" onclick="closeCartModal()">&times;</span>
+        <h2 id="checkout-modal-title" style="margin-top:0; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: var(--text);">Your Cart</h2>
+       
         <div class="cart-items" id="cart-items-list" style="margin: 1.5rem 0; border-bottom: 1px solid var(--border); padding-bottom: 1rem;"></div>
-        
+       
         <div style="font-weight: bold; font-size: 1.2rem; text-align: right; margin-bottom: 1.5rem; background: var(--bg); padding: 0.5rem 1rem; border-radius: 4px;">
             Grand Total: ₹<span id="checkout-total">0</span>
         </div>
-        
+       
         <form id="checkout-form">
             <h3 style="margin-bottom:0.75rem; font-size:1rem; color:var(--text-light);">School Delivery Details</h3>
             <div class="form-group"><label>Full Name</label><input type="text" id="s-name" required></div>
-            <div class="form-group"><label>Contact Number</label><input type="tel" id="s-contact" placeholder="Student or Parent Phone No." required></div>
+            <div class="form-group"><label>Contact Number (For Tracking)</label><input type="tel" id="s-contact" placeholder="Enter Mobile No." required></div>
             <div class="form-group"><label>Roll Number</label><input type="text" id="s-roll" required></div>
             <div class="form-group"><label>Class & Section (e.g. 9-B)</label><input type="text" id="s-class" required></div>
             <div class="form-group"><label>Room No.</label><input type="text" id="s-room" required></div>
-            <button type="submit" class="btn-checkout">Confirm & Place Order</button>
+            <button type="submit" class="btn-checkout" id="submit-btn">Confirm & Place Order</button>
         </form>
     </div>
 </div>
 
+<!-- Success Modal -->
 <div id="success-modal" class="modal">
     <div class="modal-content" style="text-align: center; padding: 2.5rem 2rem;">
         <div class="success-checkmark"></div>
         <h2 style="color: var(--primary); font-size: 1.8rem; margin-top: 0; margin-bottom: 1rem;">Your Order is Placed!</h2>
-        
         <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 1.5rem;">
             Order ID: <strong style="color: var(--text);" id="success-order-id"></strong><br>
-            <span style="font-size: 0.95rem; color: var(--primary); font-weight: bold;">(Please note down this Order ID)</span>
+            <span style="font-size: 0.95rem; color: var(--primary); font-weight: bold;">(Screenshot or note this ID to track your order)</span>
         </p>
         <p style="font-size: 1rem; color: var(--text); margin-bottom: 0.5rem;">You will get the confirmation via <strong>WhatsApp</strong> or <strong>call</strong>.</p>
         <p style="color: var(--primary); font-weight: bold; margin-top: 0.5rem;">Your order will come to your class which you entered and only on Monday delivery.</p>
-        
+       
         <div style="background: var(--bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 2rem; margin-top:1.5rem;">
             <span style="font-size: 0.9rem; color: var(--text-light);">For instant confirmation, contact:</span><br>
             <strong style="font-size: 1.2rem; color: var(--text);">+91 9220311241</strong>
@@ -170,29 +195,70 @@
     </div>
 </div>
 
+<!-- Track Order Modal -->
+<div id="track-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeTrackModal()">&times;</span>
+        <h2 style="margin-top:0; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: var(--text);">Track Order</h2>
+        <div class="form-group" style="margin-top:1rem;">
+            <label>Enter Order ID or Mobile Number</label>
+            <div style="display:flex; gap:0.5rem;">
+                <input type="text" id="track-input" placeholder="e.g. TM-123456 or 9811...">
+                <button class="btn-checkout" style="margin-top:0; width:auto; padding: 0 1.5rem;" onclick="fetchTracking()">Search</button>
+            </div>
+        </div>
+        <div id="track-results" style="margin-top:1.5rem;"></div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast"></div>
+
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwpPrbndidj9uxH_X25K1L4p4DyH-3flK92tXE5l4n3vwBWTz4fp_yzB1cz_fTLK0S/exec";
-
+    
     let allProducts = [];
     let cart = [];
     let currentSlideIndex = 0;
     let activeCategory = 'All';
+    let isSubmitting = false;
 
-    // THEME LOGIC
-    function initTheme() {
-        if (localStorage.getItem('twinmac_theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-            document.getElementById('theme-icon').innerText = '☀️';
-        }
+    // ==================== TOAST NOTIFICATION ====================
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.innerHTML = `✅ ${message}`;
+        toast.style.display = 'flex';
+        
+        setTimeout(() => {
+            toast.style.transition = 'all 0.3s ease';
+            toast.style.opacity = '0';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+                toast.style.opacity = '1';
+                toast.style.transition = '';
+            }, 300);
+        }, 2200);
     }
+
+    // ==================== THEME ====================
+    function initTheme() {
+        try {
+            if (localStorage.getItem('twinmac_theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('theme-icon').innerText = '☀️';
+            }
+        } catch (e) {}
+    }
+   
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
-        localStorage.setItem('twinmac_theme', isDark ? 'dark' : 'light');
+        try { localStorage.setItem('twinmac_theme', isDark ? 'dark' : 'light'); } catch (e) {}
         document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
     }
-    initTheme();
 
+    // ==================== LOAD PRODUCTS ====================
     async function loadProducts() {
         try {
             const response = await fetch(SCRIPT_URL + "?action=getProducts");
@@ -200,35 +266,35 @@
             document.getElementById('loading').style.display = 'none';
             applyFilters();
         } catch (error) {
-            document.getElementById('loading').innerText = "Error syncing datastore configurations.";
+            document.getElementById('loading').innerText = "Error loading products. Please refresh the page.";
+            console.error("Failed to load products:", error);
         }
     }
 
+    // ==================== RENDER PRODUCTS ====================
     function renderProducts(productsToRender) {
         const grid = document.getElementById('product-grid');
         grid.innerHTML = '';
-        
-        if(productsToRender.length === 0) {
+       
+        if (productsToRender.length === 0) {
             grid.innerHTML = "<p style='grid-column: 1/-1; text-align:center; color: var(--text-light);'>No products found.</p>";
             return;
         }
 
         productsToRender.forEach(p => {
-            if(!p.title) return;
+            if (!p.title) return;
+
             const images = p.image ? p.image.split(',') : ['https://via.placeholder.com/300x200?text=No+Image'];
             const coverImage = images[0].trim();
             const isOutOfStock = p.stock <= 0;
-            
-            // MAGIC HACK: Bestseller detection
+           
             let rawDesc = p.desc || '';
-            let isBestseller = false;
+            let bestsellerHtml = '';
             if (rawDesc.toLowerCase().includes('[bestseller]')) {
-                isBestseller = true;
+                bestsellerHtml = `<div class="bestseller-badge">★ Bestseller</div>`;
                 rawDesc = rawDesc.replace(/\[bestseller\]/gi, '').trim();
             }
 
-            let bestsellerHtml = isBestseller ? `<div class="bestseller-badge">★ Bestseller</div>` : '';
-            
             let discountHtml = '';
             let crossPriceHtml = '';
             if (p.crossPrice && Number(p.crossPrice) > Number(p.price)) {
@@ -239,33 +305,113 @@
 
             let lowStockHtml = '';
             if (p.stock > 0 && p.stock <= 3) {
-                lowStockHtml = `<div class="low-stock-alert">⏳ Only ${p.stock} left in stock!</div>`;
+                lowStockHtml = `<div class="low-stock-alert">⏳ Only ${p.stock} left!</div>`;
             }
-            
+           
             grid.innerHTML += `
                 <div class="card">
-                    ${discountHtml}
-                    ${bestsellerHtml}
+                    ${discountHtml} ${bestsellerHtml}
                     <img src="${coverImage}" alt="${p.title}" onclick="showDetails('${p.id}')">
                     <div class="card-body">
                         <span class="category">${p.category}</span>
                         <h3 class="title" onclick="showDetails('${p.id}')">${p.title}</h3>
                         <p class="desc">${parseFormat(rawDesc)}</p>
                         <div class="price-row">
-                            <div class="price-container">
+                            <div>
                                 <span class="price">₹${p.price}</span>
                                 ${crossPriceHtml}
                             </div>
-                            <span style="font-size:0.85rem; font-weight:bold; color:${isOutOfStock ? 'var(--danger)' : 'var(--primary)'}">${isOutOfStock ? 'Out of Stock' : p.stock + ' available'}</span>
                         </div>
                         ${lowStockHtml}
-                        <button class="btn-add" onclick="addToCart('${p.id}')" ${isOutOfStock ? 'disabled' : ''}>
-                            ${isOutOfStock ? 'Unavailable' : 'Add to Cart'}
-                        </button>
+                        <div class="btn-group-half">
+                            <button class="btn-add" onclick="addToCart('${p.id}')" ${isOutOfStock ? 'disabled' : ''}>🛒 Add to Cart</button>
+                            <button class="btn-buy" onclick="buyNow('${p.id}')" ${isOutOfStock ? 'disabled' : ''}>⚡ Buy Now</button>
+                        </div>
                     </div>
                 </div>
             `;
         });
+    }
+
+    // ==================== BUY NOW ====================
+    function buyNow(id) {
+        const p = allProducts.find(x => x.id === id);
+        if (!p || p.stock <= 0) {
+            alert("Sorry, this item is out of stock!");
+            return;
+        }
+
+        cart = [];
+        
+        const images = p.image ? p.image.split(',') : ['https://via.placeholder.com/300x200?text=No+Image'];
+        let rawDesc = p.desc || '';
+        if (rawDesc.toLowerCase().includes('[bestseller]')) {
+            rawDesc = rawDesc.replace(/\[bestseller\]/gi, '').trim();
+        }
+
+        cart.push({
+            id: p.id,
+            title: p.title,
+            price: Number(p.price),
+            image: images[0].trim(),
+            desc: rawDesc,
+            quantity: 1,
+            maxStock: p.stock
+        });
+
+        updateCartUI();
+
+        document.getElementById('checkout-modal-title').innerText = "⚡ Instant Checkout";
+        document.getElementById('cart-items-list').style.display = 'block';
+        document.getElementById('checkout-modal').style.display = 'flex';
+        
+        setTimeout(() => {
+            document.getElementById('s-name').focus();
+        }, 300);
+    }
+
+    // ==================== ADD TO CART + TOAST ====================
+    function addToCart(id) {
+        if (isSubmitting) return;
+
+        const p = allProducts.find(x => x.id === id);
+        if (!p) return;
+
+        const existingItem = cart.find(item => item.id === id);
+
+        if (existingItem) {
+            if (existingItem.quantity >= 4) {
+                alert("Maximum limit is 4 units per item.");
+                return;
+            }
+            if (existingItem.quantity >= p.stock) {
+                alert(`Only ${p.stock} left in stock!`);
+                return;
+            }
+            existingItem.quantity += 1;
+        } else {
+            if (p.stock <= 0) {
+                alert("Sorry, this item is out of stock!");
+                return;
+            }
+            const images = p.image ? p.image.split(',') : ['https://via.placeholder.com/300x200?text=No+Image'];
+            let rawDesc = p.desc || '';
+            if (rawDesc.toLowerCase().includes('[bestseller]')) {
+                rawDesc = rawDesc.replace(/\[bestseller\]/gi, '').trim();
+            }
+            cart.push({
+                id: p.id,
+                title: p.title,
+                price: Number(p.price),
+                image: images[0].trim(),
+                desc: rawDesc,
+                quantity: 1,
+                maxStock: p.stock
+            });
+        }
+
+        updateCartUI();
+        showToast(`${p.title} added to cart!`);   // ← Toast notification added here
     }
 
     function parseFormat(text) {
@@ -273,10 +419,12 @@
         return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     }
 
+    // ==================== FILTERING ====================
     function filterByCategory(cat) {
         activeCategory = cat;
         document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-        document.getElementById('chip-' + cat).classList.add('active');
+        const chip = document.getElementById('chip-' + cat);
+        if (chip) chip.classList.add('active');
         applyFilters();
     }
 
@@ -285,10 +433,12 @@
     }
 
     function applyFilters() {
-        const query = document.getElementById('search-input').value.toLowerCase();
+        const query = document.getElementById('search-input').value.toLowerCase().trim();
         const filtered = allProducts.filter(p => {
-            const matchesSearch = (p.title && String(p.title).toLowerCase().includes(query)) || 
-                                  (p.category && String(p.category).toLowerCase().includes(query));
+            const matchesSearch = !query || 
+                (p.title && String(p.title).toLowerCase().includes(query)) ||
+                (p.category && String(p.category).toLowerCase().includes(query)) ||
+                (p.desc && String(p.desc).toLowerCase().includes(query));
             const matchesCategory = activeCategory === 'All' || (p.category && p.category === activeCategory);
             return matchesSearch && matchesCategory;
         });
@@ -298,17 +448,18 @@
     function resetSearch() {
         document.getElementById('search-input').value = '';
         filterByCategory('All');
-        window.scrollTo({top: 0, behavior: 'smooth'});
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // ==================== PRODUCT DETAILS ====================
     function showDetails(id) {
         const p = allProducts.find(x => x.id === id);
-        if(!p) return;
+        if (!p) return;
 
         const images = p.image ? p.image.split(',') : ['https://via.placeholder.com/300x200?text=No+Image'];
         const isOutOfStock = p.stock <= 0;
         currentSlideIndex = 0;
-        
+       
         let rawDesc = p.desc || '';
         if (rawDesc.toLowerCase().includes('[bestseller]')) {
             rawDesc = rawDesc.replace(/\[bestseller\]/gi, '').trim();
@@ -316,7 +467,7 @@
 
         let carouselSlidesHtml = images.map((img, idx) => `
             <div class="carousel-slide ${idx === 0 ? 'active' : ''}">
-                <img src="${img.trim()}" alt="Slider Visual">
+                <img src="${img.trim()}" alt="Product image">
             </div>
         `).join('');
 
@@ -328,10 +479,8 @@
         let detailPricingHtml = `<span class="price" style="font-size: 1.6rem;">₹${p.price}</span>`;
         if (p.crossPrice && Number(p.crossPrice) > Number(p.price)) {
             let discountPercent = Math.round(((Number(p.crossPrice) - Number(p.price)) / Number(p.crossPrice)) * 100);
-            detailPricingHtml += `
-                <span style="color:var(--text-light); text-decoration:line-through; margin-left:0.5rem; font-size:1.1rem;">₹${p.crossPrice}</span>
-                <span style="color:var(--danger); font-weight:bold; margin-left:0.5rem; font-size:1rem;">(${discountPercent}% OFF)</span>
-            `;
+            detailPricingHtml += `<span style="color:var(--text-light); text-decoration:line-through; margin-left:0.5rem; font-size:1.1rem;">₹${p.crossPrice}</span>
+                                  <span style="color:var(--danger); font-weight:bold; margin-left:0.5rem; font-size:1rem;">(${discountPercent}% OFF)</span>`;
         }
 
         let lowStockHtml = '';
@@ -343,69 +492,45 @@
             <span class="close" onclick="closeDetails()">&times;</span>
             <div class="category" style="margin-top:0.5rem;">${p.category}</div>
             <h2 class="detail-title">${p.title}</h2>
-            
-            <div class="carousel-container">
-                ${carouselSlidesHtml}
-                ${navigationControls}
-            </div>
-            
+            <div class="carousel-container">${carouselSlidesHtml}${navigationControls}</div>
             <div class="detail-desc">${parseFormat(rawDesc)}</div>
             <div class="price-row" style="border-top:1px solid var(--border); padding-top:1rem; margin-bottom:0.5rem;">
                 <div>${detailPricingHtml}</div>
                 <span style="font-weight:bold;">${isOutOfStock ? '<span style="color:var(--danger)">Out of Stock</span>' : p.stock + ' available'}</span>
             </div>
             ${lowStockHtml}
-            <button class="btn-checkout" onclick="addToCart('${p.id}'); closeDetails();" ${isOutOfStock ? 'disabled' : ''}>
-                ${isOutOfStock ? 'Unavailable' : 'Add to Cart - ₹' + p.price}
-            </button>
+            <div class="btn-group-half">
+                <button class="btn-add" onclick="addToCart('${p.id}'); closeDetails();" ${isOutOfStock ? 'disabled' : ''}>🛒 Add to Cart</button>
+                <button class="btn-buy" onclick="buyNow('${p.id}'); closeDetails();" ${isOutOfStock ? 'disabled' : ''}>⚡ Buy Now</button>
+            </div>
         `;
         document.getElementById('detail-modal').style.display = 'flex';
     }
 
     function changeSlide(direction) {
         const slides = document.querySelectorAll('.carousel-slide');
-        if(slides.length === 0) return;
+        if (slides.length === 0) return;
         slides[currentSlideIndex].classList.remove('active');
         currentSlideIndex = (currentSlideIndex + direction + slides.length) % slides.length;
         slides[currentSlideIndex].classList.add('active');
     }
 
-    function closeDetails() { document.getElementById('detail-modal').style.display = 'none'; }
-
-    function addToCart(id) {
-        const p = allProducts.find(x => x.id === id);
-        if(!p) return;
-
-        const existingItem = cart.find(item => item.id === id);
-        if (existingItem) {
-            if (existingItem.quantity >= 4) {
-                alert("Maximum allowable limit matched (4 units max per student)."); return;
-            }
-            if (existingItem.quantity >= p.stock) {
-                alert(`Sorry, we only have ${p.stock} unit(s) of this item left in stock!`); return;
-            }
-            existingItem.quantity += 1;
-        } else {
-            if (p.stock <= 0) { alert("Sorry, this item is currently out of stock!"); return; }
-            const images = p.image ? p.image.split(',') : ['https://via.placeholder.com/300x200?text=No+Image'];
-            let rawDesc = p.desc || '';
-            if (rawDesc.toLowerCase().includes('[bestseller]')) rawDesc = rawDesc.replace(/\[bestseller\]/gi, '').trim();
-            
-            cart.push({ id: p.id, title: p.title, price: Number(p.price), image: images[0].trim(), desc: rawDesc, quantity: 1, maxStock: p.stock });
-        }
-        updateCartUI();
+    function closeDetails() {
+        document.getElementById('detail-modal').style.display = 'none';
     }
 
+    // ==================== CART MANAGEMENT ====================
     function updateQty(id, delta) {
         const item = cart.find(x => x.id === id);
-        if(!item) return;
-        
-        let newQty = item.quantity + delta;
-        if(newQty < 1) newQty = 1;
-        
-        if(newQty > 4) { alert("Maximum allowable limit matched (4)."); newQty = 4; }
-        if (newQty > item.maxStock) { alert(`Sorry, we only have ${item.maxStock} unit(s) available!`); newQty = item.maxStock; }
+        if (!item) return;
 
+        let newQty = item.quantity + delta;
+        if (newQty < 1) newQty = 1;
+        if (newQty > 4) newQty = 4;
+        if (newQty > item.maxStock) {
+            alert(`Only ${item.maxStock} available!`);
+            newQty = item.maxStock;
+        }
         item.quantity = newQty;
         updateCartUI();
     }
@@ -416,23 +541,27 @@
     }
 
     function updateCartUI() {
-        let totalCount = 0; let grandTotal = 0;
+        let totalCount = 0;
+        let grandTotal = 0;
         const list = document.getElementById('cart-items-list');
+        
+        if (!list) return;
+
         list.innerHTML = '';
 
         cart.forEach(item => {
             totalCount += item.quantity;
-            let itemTotal = item.price * item.quantity;
+            const itemTotal = Number(item.price) * Number(item.quantity);
             grandTotal += itemTotal;
 
             list.innerHTML += `
                 <div class="cart-item-card">
-                    <img src="${item.image}" alt="Cover image representation">
+                    <img src="${item.image}" alt="${item.title}">
                     <div class="cart-item-details">
-                        <div class="cart-item-title" style="color:var(--text);">${item.title}</div>
+                        <div class="cart-item-title">${item.title}</div>
                         <div style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.25rem;">₹${item.price} each</div>
                         <div class="cart-qty-row">
-                            <button class="qty-btn" onclick="updateQty('${item.id}', -1)">-</button>
+                            <button class="qty-btn" onclick="updateQty('${item.id}', -1)">−</button>
                             <span class="qty-num">${item.quantity}</span>
                             <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
                             <button class="remove-cart-item" onclick="removeCartItem('${item.id}')">Remove</button>
@@ -443,55 +572,188 @@
             `;
         });
 
-        document.getElementById('cart-count').innerText = totalCount;
-        document.getElementById('cart-total').innerText = grandTotal;
-        document.getElementById('checkout-total').innerText = grandTotal;
+        const cartCountEl = document.getElementById('cart-count');
+        if (cartCountEl) cartCountEl.innerText = totalCount;
+
+        const checkoutTotalEl = document.getElementById('checkout-total');
+        if (checkoutTotalEl) checkoutTotalEl.innerText = grandTotal;
     }
 
     function toggleCart() {
         const modal = document.getElementById('checkout-modal');
-        if (modal.style.display === 'flex') modal.style.display = 'none';
-        else {
-            if (cart.length === 0) { alert("Your cart is empty!"); return; }
+        if (modal.style.display === 'flex') {
+            closeCartModal();
+        } else {
+            if (cart.length === 0) {
+                alert("Your cart is empty! Add some items first.");
+                return;
+            }
+            document.getElementById('checkout-modal-title').innerText = "Your Cart";
+            document.getElementById('cart-items-list').style.display = 'block';
             modal.style.display = 'flex';
         }
     }
 
-    function openSuccessModal(orderId) {
+    function closeCartModal() {
         document.getElementById('checkout-modal').style.display = 'none';
-        document.getElementById('success-order-id').innerText = orderId;
-        document.getElementById('success-modal').style.display = 'flex';
     }
-    
-    function closeSuccessModal() { document.getElementById('success-modal').style.display = 'none'; }
 
+    // ==================== PLACE ORDER (FIXED) ====================
     document.getElementById('checkout-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.querySelector('.btn-checkout');
-        btn.innerText = "Transmitting order..."; btn.disabled = true;
+        
+        if (isSubmitting) return;
+        if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        isSubmitting = true;
+        const btn = document.getElementById('submit-btn');
+        const originalBtnText = btn.innerText;
+        btn.innerText = "Processing Order...";
+        btn.disabled = true;
 
         const orderId = 'TM-' + Math.random().toString(36).substr(2, 6).toUpperCase();
         const itemsSummary = cart.map(i => `${i.title} (x${i.quantity})`).join(", ");
-        const grandTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const grandTotal = cart.reduce((sum, item) => sum + (Number(item.price) * Number(item.quantity)), 0);
 
         const payload = {
-            action: "addOrder", orderId: orderId,
-            name: document.getElementById('s-name').value,
-            contact: document.getElementById('s-contact').value,
-            roll: document.getElementById('s-roll').value,
-            classSec: document.getElementById('s-class').value,
-            room: document.getElementById('s-room').value,
-            items: itemsSummary, total: grandTotal, cartData: cart
+            action: "addOrder",
+            orderId: orderId,
+            name: document.getElementById('s-name').value.trim(),
+            contact: document.getElementById('s-contact').value.trim(),
+            roll: document.getElementById('s-roll').value.trim(),
+            classSec: document.getElementById('s-class').value.trim(),
+            room: document.getElementById('s-room').value.trim(),
+            items: itemsSummary,
+            total: grandTotal,
+            cartData: cart
         };
 
         try {
-            await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
-            cart = []; updateCartUI(); loadProducts(); document.getElementById('checkout-form').reset();
-            openSuccessModal(orderId);
-        } catch (error) { alert("Connection Error. Please try again."); } 
-        finally { btn.innerText = "Confirm & Place Order"; btn.disabled = false; }
+            // IMPORTANT: No custom headers for Google Apps Script compatibility
+            const response = await fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            // Google Apps Script often returns 200 even on error, so we check differently
+            if (!response.ok) {
+                throw new Error(`Server responded with status: ${response.status}`);
+            }
+
+            // Success
+            cart = [];
+            updateCartUI();
+            await loadProducts();
+            document.getElementById('checkout-form').reset();
+            closeCartModal();
+
+            document.getElementById('success-order-id').innerText = orderId;
+            document.getElementById('success-modal').style.display = 'flex';
+
+        } catch (error) {
+            console.error("Order placement error:", error);
+            alert("Failed to place order. Please check your internet connection and try again.\n\nTip: Make sure the Google Apps Script is deployed correctly.");
+        } finally {
+            btn.innerText = originalBtnText;
+            btn.disabled = false;
+            isSubmitting = false;
+        }
     });
 
+    function closeSuccessModal() {
+        document.getElementById('success-modal').style.display = 'none';
+    }
+
+    // ==================== TRACK ORDER ====================
+    function openTrackModal() {
+        document.getElementById('track-modal').style.display = 'flex';
+    }
+
+    function closeTrackModal() {
+        document.getElementById('track-modal').style.display = 'none';
+        document.getElementById('track-results').innerHTML = '';
+        document.getElementById('track-input').value = '';
+    }
+
+    async function fetchTracking() {
+        const query = document.getElementById('track-input').value.trim();
+        if (!query) {
+            alert("Please enter Order ID or Mobile Number");
+            return;
+        }
+
+        const resultsDiv = document.getElementById('track-results');
+        resultsDiv.innerHTML = "Searching...";
+
+        try {
+            const res = await fetch(SCRIPT_URL + "?action=trackOrder&query=" + encodeURIComponent(query));
+            const data = await res.json();
+
+            if (!data || data.length === 0) {
+                resultsDiv.innerHTML = `<div style="color:var(--danger); text-align:center; font-weight:bold; padding:1rem;">No active order found.<br>It may have already been delivered.</div>`;
+                return;
+            }
+
+            resultsDiv.innerHTML = '';
+
+            data.forEach(order => {
+                let statusColor = order.status === 'Confirmed' ? 'var(--primary)' : 'var(--warning)';
+                
+                let parsedItemsHtml = '';
+                const itemStrings = order.items.split(", ");
+                
+                itemStrings.forEach(itemStr => {
+                    const match = itemStr.match(/(.*) \(x(\d+)\)$/);
+                    if (match) {
+                        const title = match[1];
+                        const qty = match[2];
+                        const matchedProduct = allProducts.find(p => 
+                            p.title && String(p.title).trim().toLowerCase() === String(title).trim().toLowerCase()
+                        );
+                        const imgUrl = matchedProduct && matchedProduct.image 
+                            ? matchedProduct.image.split(',')[0].trim() 
+                            : 'https://via.placeholder.com/60x80?text=Item';
+
+                        parsedItemsHtml += `
+                            <div class="cart-item-card" style="margin-bottom:0.5rem; border:none; padding:0.5rem;">
+                                <img src="${imgUrl}" alt="${title}" style="width:50px; height:65px;">
+                                <div>
+                                    <div style="font-weight:bold; color:var(--text);">${title}</div>
+                                    <div style="font-size:0.8rem; color:var(--text-light);">Qty: ${qty}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                resultsDiv.innerHTML += `
+                    <div style="border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: var(--bg);">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">
+                            <strong style="color:var(--text);">${order.orderId}</strong>
+                            <strong style="color:${statusColor}; font-size:1.1rem;">${order.status}</strong>
+                        </div>
+                        <div style="margin-bottom: 1.5rem; padding: 0.75rem; background: var(--surface); border-radius: 4px; border-left: 4px solid var(--primary);">
+                            📢 ${order.message || 'Your order is being processed.'}
+                        </div>
+                        <div>${parsedItemsHtml}</div>
+                        <div style="text-align:right; font-weight:bold; font-size:1.1rem; color:var(--text); margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+                            Grand Total: ₹${order.total}
+                        </div>
+                    </div>
+                `;
+            });
+
+        } catch (e) {
+            console.error("Tracking error:", e);
+            resultsDiv.innerHTML = `<div style="color:var(--danger); text-align:center;">Error connecting to server. Please try again.</div>`;
+        }
+    }
+
+    // ==================== INITIALIZE ====================
+    initTheme();
     loadProducts();
 </script>
 </body>
